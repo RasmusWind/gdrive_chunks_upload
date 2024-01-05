@@ -45,7 +45,7 @@ def gdrive_authentication(access_token_path: str) -> GoogleDrive|None:
 def upload_dir_to_gdrive(drive: GoogleDrive, gdrive_base_id: str, gdrive_folder_id: str, path_to_dir: str, pb:ProgressBar=None) -> None:
     dir_name = os.path.split(path_to_dir)[-1]
 
-    folder = gdrive_folder_exists(drive, gdrive_folder_id, dir_name)
+    folder = gdrive_folder_exists(drive, gdrive_base_id, gdrive_folder_id, dir_name)
     if folder:
         folder.Delete()
 
@@ -73,7 +73,7 @@ def upload_dir_to_gdrive(drive: GoogleDrive, gdrive_base_id: str, gdrive_folder_
 
 def upload_file_to_gdrive(drive: GoogleDrive, gdrive_base_id: str, gdrive_folder_id: str, path_to_file: str):
     title = os.path.split(path_to_file)[-1]
-    existing_file = gdrive_folder_exists(drive, gdrive_folder_id, os.path.split(path_to_file)[-1])
+    existing_file = gdrive_folder_exists(drive, gdrive_base_id, gdrive_folder_id, os.path.split(path_to_file)[-1])
     if existing_file:
         existing_file.Delete()
     file = drive.CreateFile({

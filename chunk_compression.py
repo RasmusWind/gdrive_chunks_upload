@@ -72,8 +72,11 @@ def compress_chunks(chunks_dict:dict, pb:ProgressBar=None, root=True) -> str|Non
         for chunk in chunks:
             if isinstance(chunk, list): #Chunk is a 1D list and all elements within needs to be zipped. 
                 zfile = zipfile.ZipFile(os.path.join(new_path, f"chunk_{chunk_count}.zip"), mode="w")
+
+                single = MAX_CHUNK_SIZE / len(chunk)
+                single_percent = single / MAX_CHUNK_SIZE
                 try:
-                    for chunk_file in chunk:
+                    for ind, chunk_file in enumerate(chunk):
                         file_path = os.path.join(folder_path, chunk_file)
                         if os.path.isdir(file_path):
                             zipfolder(f"{file_path}_backup", file_path)
@@ -82,13 +85,13 @@ def compress_chunks(chunks_dict:dict, pb:ProgressBar=None, root=True) -> str|Non
                             os.remove(os.path.join(folder_path, chunk_file))
                         else:
                             zfile.write(os.path.join(folder_path, chunk_file), chunk_file, compress_type=COMPRESSION_MODE)
+                        if pb:
+                            pb.increment_progress(single_percent)
                 except FileNotFoundError as e:
                     print("File not found")
                     print(e)
                 finally:
                     zfile.close()
-                    if pb:
-                        pb.increment_progress()
                 chunk_count += 1
             elif isinstance(chunk, dict): #Chunk is a folder containing elements with a collective size over the MAX_CHUNK_SIZE limit.
                 compress_chunks(chunk, pb=pb, root=False)
