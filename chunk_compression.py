@@ -3,7 +3,7 @@ import zipfile
 from progressbar import ProgressBar
 
 
-MAX_CHUNK_SIZE = 10 * 1024 * 1024 * 1024 # 10 GigaBytes
+MAX_CHUNK_SIZE = 2 * 1024 * 1024 * 1024 # 10 GigaBytes
 COMPRESSION_MODE = zipfile.ZIP_DEFLATED
 
 
